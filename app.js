@@ -1,12 +1,14 @@
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
+const urlShortener = require('./routes/url_shortener');
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// TODO: try and implement URL encoder
+
+app.use("/", urlShortener);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
