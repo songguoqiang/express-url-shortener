@@ -1,16 +1,36 @@
-if(process.env.NODE_ENV !== 'production') {
-  require('dotenv').load();
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").load();
 }
 
 const express = require("express");
-const path = require("path");
+const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const urlShortener = require('./routes/url_shortener');
+const urlShortener = require("./routes/url_shortener");
 
+const isProduction = process.env.NODE_ENV === "production";
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+const dbUrl = process.env.MONGODB_URL;
+mongoose.connect(dbUrl, {}).then(async () => {
+  console.log("Connected to mongo database at " + dbUrl);
+
+  const Counter = require("./models/counter");
+
+  const doc = await Counter.findById({ _id: "url_count" });
+  if (!doc) {
+    console.log("Initializing the counter.");
+    var counter = new Counter({ _id: "url_count", count: 10000 });
+    await counter.save();
+    console.log("Counter initialized..");
+  }
+});
+
+if (!isProduction) {
+  mongoose.set("debug", true);
+}
 
 app.use("/", urlShortener);
 
@@ -29,7 +49,8 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render("error");
+  console.log(err);
+  res.send("error");
 });
 
 module.exports = app;
