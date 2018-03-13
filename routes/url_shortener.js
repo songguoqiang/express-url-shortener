@@ -3,6 +3,7 @@ const btoa = require("btoa");
 const express = require("express");
 const router = express.Router();
 const URL = require("../models/url");
+const handleAsyncError = require("express-async-wrap");
 
 function missingHashError(res) {
   return res
@@ -18,8 +19,7 @@ function getIdFromHash(hash) {
   return parseInt(decodeUrlHash(hash));
 }
 
-// TODO: handle the possible rejected promise from the async function
-router.post("/shorten-url", async function(req, res, next) {
+async function shortenUrlHandler(req, res, next) {
   const longUrl = req.body.url;
 
   if (!longUrl) {
@@ -42,9 +42,9 @@ router.post("/shorten-url", async function(req, res, next) {
       hash: btoa(url._id)
     });
   }
-});
+}
 
-router.get("/expand-url", async function(req, res, next) {
+async function getUrlHandler(req, res, next) {
   const hash = req.query.hash;
 
   if (!hash) {
@@ -61,9 +61,9 @@ router.get("/expand-url", async function(req, res, next) {
       .status(404)
       .send({ message: `There is no URL registered for hash value ${hash}` });
   }
-});
+}
 
-router.delete("/expand-url", async function(req, res, next) {
+async function deleteUrlHandler(req, res, next) {
   const hash = req.query.hash;
 
   if (!hash) {
@@ -83,6 +83,10 @@ router.delete("/expand-url", async function(req, res, next) {
       .status(404)
       .send({ message: `There is no URL registered for hash value ${hash}` });
   }
-});
+}
+
+router.post("/shorten-url", handleAsyncError(shortenUrlHandler));
+router.get("/expand-url", handleAsyncError(getUrlHandler));
+router.delete("/expand-url", handleAsyncError(deleteUrlHandler));
 
 module.exports = router;

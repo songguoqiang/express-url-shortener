@@ -108,6 +108,10 @@ etag@~1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
 
+express-async-wrap@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/express-async-wrap/-/express-async-wrap-1.0.0.tgz#f9972d2b726fe68c0daf0495b8fc2137c54457aa"
+
 express@^4.16.2:
   version "4.16.2"
   resolved "https://registry.yarnpkg.com/express/-/express-4.16.2.tgz#e35c6dfe2d64b7dca0a5cd4f21781be3299e076c"
