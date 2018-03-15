@@ -13,7 +13,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const dbUrl = process.env.MONGODB_URL;
+const dbUrl = process.env.MONGODB_URI;
 mongoose.connect(dbUrl, {}).then(async () => {
   console.log("Connected to mongo database at " + dbUrl);
 
