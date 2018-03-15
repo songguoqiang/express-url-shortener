@@ -19,7 +19,7 @@ mongoose.connect(dbUrl, {}).then(async () => {
 
   const Counter = require("./models/counter");
 
-  const doc = await Counter.findById({ _id: "url_count" });
+  const doc = await Counter.findById("url_count");
   if (!doc) {
     console.log("Initializing the counter.");
     var counter = new Counter({ _id: "url_count", count: 10000 });
